@@ -6,6 +6,7 @@ class Program
 {
     static void Main()
     {
+        Console.WriteLine("Ingreso manual de libros");
         BibliotecaService service = new BibliotecaService();
         service.registrarLibro(new Libro("Cien anios de soledad", "Gabriel García Márquez", "Ficción", 12345));
         service.registrarLibro(new Libro("1984", "George Orwell", "Distopía", 98765));
