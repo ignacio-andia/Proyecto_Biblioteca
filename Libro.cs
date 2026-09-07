@@ -6,9 +6,9 @@ namespace ProyectoBiblioteca
 {
     internal class Libro : IPrestable
     {
-        private string Titulo { get; set; }
-        private string Autor { get; set; }
-        private string Categoria { get; set; }
+        public string Titulo { get; private set; }
+        public string Autor { get; private set; }
+        public string Categoria { get; private set; }
         public int Codigo { get; private set; }
         public bool Disponible { get; private set; }
 

@@ -96,6 +96,28 @@ namespace ProyectoBiblioteca
             }
         }
 
+        public List<Libro> ObtenerLibrosOrdenadosPorTitulo()
+        {
+            return libros
+                .OrderBy(l => l.Titulo)
+                .ToList();
+        }
+
+        public List<Libro> ObtenerLibrosPorAutor(string autor)
+        {
+            return libros
+                .Where(l => l.Autor == autor)
+                .ToList();
+        }
+
+        public List<Libro> ObtenerLibrosPorCategoria(string categoria)
+        {
+            return libros
+                .Where(l => l.Categoria == categoria)
+                .ToList();
+        }
+
+
         public Usuario BuscarUsuario(int ID_usuario)
         {
             return usuarios.FirstOrDefault(usuario => usuario.ID == ID_usuario);
@@ -119,13 +141,13 @@ namespace ProyectoBiblioteca
 
             if (libro == null)
             {
-                Console.WriteLine("Libro no Exsite.");
+                Console.WriteLine("Libro no exsite.");
                 return false;
             }
 
             if (!libro.Disponible)
             {
-                Console.WriteLine("El libro no está disponible.");
+                Console.WriteLine("El libro no esta disponible.");
                 return false;
             }
 
@@ -150,7 +172,7 @@ namespace ProyectoBiblioteca
             );
             if (prestamo == null)
             {
-                Console.WriteLine("No se encontró un préstamo activo para este usuario y libro.");
+                Console.WriteLine("No se encontro un prestamo activo para este usuario y libro.");
                 return false;
             }
             Libro libro = BuscarLibro(Codigo_Libro);
@@ -194,7 +216,7 @@ namespace ProyectoBiblioteca
                 int i = 0;
                 foreach (var prestamo in ListaAMostrar)
                 {
-                    Console.WriteLine($"Préstamo {i + 1}:");
+                    Console.WriteLine($"Prestamo {i + 1}:");
                     prestamo.MostrarPrestamo();
                     i++;
                     Console.WriteLine("--------------------");
@@ -202,9 +224,52 @@ namespace ProyectoBiblioteca
             }
             else
             {
-                Console.WriteLine("No hay préstamos para mostrar.");
+                Console.WriteLine("No hay prestamos para mostrar.");
             }
         }
+
+
+        public bool EliminarLibro(int codigo)
+        {
+            Libro libro = BuscarLibro(codigo);
+
+            if (libro == null)
+            {
+                Console.WriteLine("No se encontro un libro con ese codigo.");
+                return false;
+            }
+
+            if (!libro.Disponible)
+            {
+                Console.WriteLine("No se puede eliminar el libro porque esta actualmente prestado.");
+                return false;
+            }
+
+            libros.Remove(libro);
+            return true;
+        }
+
+
+        public void MostrarDatosPrincipalesPrestamosActivos()
+        {
+            var prestamosActivos = prestamos
+                .Where(p => p.Fecha_Devolucion == null)
+                .Select(p => new
+                {
+                    Usuario = p.Usuario_ID,
+                    Libro = p.Libro_codigo,
+                    FechaPrestamo = p.Fecha_Prestamo
+                });
+
+            foreach (var prestamo in prestamosActivos)
+            {
+                Console.WriteLine($"Usuario: {prestamo.Usuario}");
+                Console.WriteLine($"Libro: {prestamo.Libro}");
+                Console.WriteLine($"Fecha de préstamo: {prestamo.FechaPrestamo}");
+                Console.WriteLine("--------------------");
+            }
+        }
+
 
     }
 }
