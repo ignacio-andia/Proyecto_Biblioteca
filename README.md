@@ -51,3 +51,7 @@ Aplicación de consola desarrollada en C# con .NET 10 para gestionar libros, usu
 ## Autor
 
 Proyecto académico desarrollado para la gestión de una biblioteca.
+
+## Estado del proyecto
+
+Proyecto académico funcional desarrollado como aplicación de consola.
