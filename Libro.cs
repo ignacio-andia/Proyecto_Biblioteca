@@ -10,7 +10,7 @@ namespace ProyectoBiblioteca
         private string Autor { get; set; }
         private string Categoria { get; set; }
         private int Codigo { get; set; }
-        private bool Disponible { get; set; }
+        public bool Disponible { get; private set; }
 
         public Libro(string Titulo, string Autor, string Categoria, int Codigo)
         {
