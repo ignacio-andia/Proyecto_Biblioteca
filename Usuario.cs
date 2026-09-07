@@ -6,9 +6,24 @@ namespace ProyectoBiblioteca
 {
     internal class Usuario
     {
-        private int ID { get; set; }
-        private string nombre { get; set; }
+        public int ID { get; private  set; }
+        private string Nombre { get; set; }
         private string Correo { get; set; } 
 
+
+        public Usuario(int id, string nombre, string correo)
+        {
+            ID = id;
+            Nombre = nombre;
+            Correo = correo;
+        }
+
+        public void MostrarUsuario()
+        {
+            Console.WriteLine($"ID: {ID}");
+            Console.WriteLine($"Nombre: {Nombre}");
+            Console.WriteLine($"Correo: {Correo}");
+            Console.WriteLine("---------------------------");
+        }
     }
 }
