@@ -13,10 +13,11 @@ class Program
         Console.WriteLine("|1. Registrar libro   *            |");
         Console.WriteLine("|2. Registrar usuario  *           |");
         Console.WriteLine("|3. Registrar préstamo            |");
-        Console.WriteLine("|4. Mostrar libros     *           |");
-        Console.WriteLine("|5. Mostrar usuarios    *          |");
-        Console.WriteLine("|6. Mostrar préstamos Activos     |");
-        Console.WriteLine("|7. Salir                         |");
+        Console.WriteLine("|4. Devolver préstamo             |");
+        Console.WriteLine("|5. Mostrar libros     *           |");
+        Console.WriteLine("|6. Mostrar usuarios    *          |");
+        Console.WriteLine("|7. Mostrar préstamos              |");
+        Console.WriteLine("|8. Salir                         |");
         Console.WriteLine("===================================");
         Console.WriteLine("|Seleccione una opción:");
     }
@@ -34,7 +35,17 @@ class Program
     }
 
 
-
+    static void MenuPrestamos()
+    {
+        Console.WriteLine("===================================");
+        Console.WriteLine("|         Mostrar Préstamos       |");
+        Console.WriteLine("===================================");
+        Console.WriteLine("|1. Todos Los Préstamos           |");
+        Console.WriteLine("|2. Préstamos Activos             |");
+        Console.WriteLine("|3. Préstamos Devueltos           |");
+        Console.WriteLine("===================================");
+        Console.WriteLine("|Seleccione una opción:");
+    }
 
 
     static void RegistrarLibro(BibliotecaService service)
@@ -53,7 +64,14 @@ class Program
         Console.WriteLine("Ingrese el código del libro:");
         if (int.TryParse(Console.ReadLine(), out int codigo))
         {
-            service.registrarLibro(new Libro(titulo, autor, genero, codigo));
+            try
+            {
+                service.registrarLibro(new Libro(titulo, autor, genero, codigo));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
         else
         {
@@ -77,7 +95,15 @@ class Program
             Console.WriteLine("Ingrese el correo del usuario:");
             string correo = Console.ReadLine();
 
-            service.registrarUsuario(new Usuario(id, nombre, correo));
+            try
+            {
+                service.registrarUsuario(new Usuario(id, nombre, correo));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
         }
         else
         {
@@ -114,11 +140,40 @@ class Program
         }
     }
 
+    static void DevolverPrestamo(BibliotecaService service)
+    {
+        Console.WriteLine("Devolver préstamo");
+        Console.WriteLine("Ingrese el ID del usuario:");
+        if (int.TryParse(Console.ReadLine(), out int usuarioId))
+        {
+            Console.WriteLine("Ingrese el código del libro:");
+            if (int.TryParse(Console.ReadLine(), out int libroCodigo))
+            {
+                bool resultado = service.DevolverPrestamo(usuarioId, libroCodigo);
+                if (resultado)
+                {
+                    Console.WriteLine(
+                        $"Préstamo devuelto para el usuario {usuarioId} y el libro {libroCodigo}."
+                    );
+                }
+            }
+            else
+            {
+                Console.WriteLine("El código del libro debe ser un número.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("El ID del usuario debe ser un número.");
+        }
+    }
+
     static void Main()
     {
 
         int opcion;
         int opcion1;
+        int opcion2;
 
         BibliotecaService service = new BibliotecaService();
 
@@ -132,8 +187,11 @@ class Program
         service.registrarUsuario(new Usuario(2, "María García", "maria.garcia@example.com"));
         service.registrarUsuario(new Usuario(3, "Carlos López", "carlos.lopez@example.com"));
 
-        //-------- prueba de datos para mostrar prestamos en el menu
+        //-------- prueba de datos para registrar prestamos en el menu
         service.registraPrestamo(1, 12345); // Juan Pérez toma prestado "Cien años de soledad"
+
+        //prueba para devolver un libro prestado
+        //service.DevolverPrestamo(1, 12345); // Juan Pérez devuelve "Cien años de soledad"
 
         do
         {
@@ -159,6 +217,10 @@ class Program
                     break;
 
                 case 4:
+                    DevolverPrestamo(service);
+                    break;
+
+                case 5:
                     Console.Clear();
                     menuLibros();
                         if (int.TryParse(Console.ReadLine(), out opcion1)) //control de errores
@@ -172,7 +234,7 @@ class Program
                                 service.MostrarLibros(service.ObtenerLibrosDisponibles());
                                 break;
                             case 3:
-                                    service.MostrarLibros(service.ObternerLibrosNoDisponibles());
+                                service.MostrarLibros(service.ObternerLibrosNoDisponibles());
                                 break;
                             default:
                                 Console.WriteLine("Opción no válida");
@@ -185,16 +247,43 @@ class Program
                         }
                     break;
 
-                case 5:
+                case 6:
                     Console.Clear();
                     service.mostrarUsuarios();
                     break;
 
-                case 6:
-                    Console.WriteLine("Mostrar préstamos");
+                case 7:
+                    Console.Clear();
+                    MenuPrestamos();
+                        if (int.TryParse(Console.ReadLine(), out opcion2))
+                        {
+
+                            switch (opcion2)
+                            {
+                                case 1:
+                                    service.MostrarPrestamos(service.obtenerTodosLosprestamosRegistrados());
+                                    break;
+
+                                case 2:
+                                    service.MostrarPrestamos(service.obtenerPrestamosActivos());
+                                    break;
+
+                                case 3:
+                                    service.MostrarPrestamos(service.obtenerPrestamosDevueltos());
+                                    break;
+                                default:
+                                    Console.WriteLine("Opción no válida");
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Debe ingresar un número.");
+                        }
+
                     break;
 
-                case 7:
+                case 8:
                     Console.Clear();
                     Console.WriteLine("Saliendo...");
                     Console.WriteLine("presione una vez mas para salir");
@@ -214,6 +303,6 @@ class Program
                 Console.ReadKey(); // bloque por un rato
 
             }
-        } while(opcion != 7);
+        } while(opcion != 8);
     }
 }
