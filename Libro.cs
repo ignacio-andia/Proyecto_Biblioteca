@@ -4,12 +4,12 @@ using System.Text;
 
 namespace ProyectoBiblioteca
 {
-    internal class Libro
+    internal class Libro : IPrestable
     {
         private string Titulo { get; set; }
         private string Autor { get; set; }
         private string Categoria { get; set; }
-        private int Codigo { get; set; }
+        public int Codigo { get; private set; }
         public bool Disponible { get; private set; }
 
         public Libro(string Titulo, string Autor, string Categoria, int Codigo)
@@ -21,6 +21,15 @@ namespace ProyectoBiblioteca
             this.Disponible = true;
         }
 
+        public void Prestar()
+        {
+            Disponible = false;
+        }
+
+        public void Devolver()
+        {
+            Disponible = true;
+        }
         public void MostrarLibro()
         {
             Console.WriteLine($"Titulo: {Titulo}");

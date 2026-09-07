@@ -4,11 +4,10 @@ using System.Text;
 
 namespace ProyectoBiblioteca
 {
-    internal record Prestamo
-    {
-        private int Usuario_ID { get; set; }
-        private int libro_codigo { get; set; }
-        private DateTime fecha_prestamo { get; set; }
-        private DateTime? fecha_devolucion { get; set; }
-    }
+    internal record Prestamo(
+        int Usuario_ID,
+        int Libro_codigo,
+        DateTime Fecha_Prestamo,
+        DateTime? Fecha_Devolucion
+    );
 }

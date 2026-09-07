@@ -11,10 +11,10 @@ class Program
         Console.WriteLine("|    Bienvenido a la Biblioteca   |");
         Console.WriteLine("===================================");
         Console.WriteLine("|1. Registrar libro   *            |");
-        Console.WriteLine("|2. Registrar usuario             |");
+        Console.WriteLine("|2. Registrar usuario  *           |");
         Console.WriteLine("|3. Registrar préstamo            |");
         Console.WriteLine("|4. Mostrar libros     *           |");
-        Console.WriteLine("|5. Mostrar usuarios              |");
+        Console.WriteLine("|5. Mostrar usuarios    *          |");
         Console.WriteLine("|6. Mostrar préstamos Activos     |");
         Console.WriteLine("|7. Salir                         |");
         Console.WriteLine("===================================");
@@ -63,6 +63,57 @@ class Program
         }
     }
 
+
+    static void registrarUsuarios(BibliotecaService service)
+    {
+        Console.WriteLine("Registrar usuario");
+
+        Console.WriteLine("Ingrese el ID del usuario:");
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            Console.WriteLine("Ingrese el nombre del usuario:");
+            string nombre = Console.ReadLine();
+
+            Console.WriteLine("Ingrese el correo del usuario:");
+            string correo = Console.ReadLine();
+
+            service.registrarUsuario(new Usuario(id, nombre, correo));
+        }
+        else
+        {
+            Console.WriteLine("El ID debe ser un número.");
+            Console.ReadKey();
+        }
+    }
+
+    static void registrarPrestamo(BibliotecaService service)
+    {
+        Console.WriteLine("Registrar préstamo");
+        Console.WriteLine("Ingrese el ID del usuario:");
+        if (int.TryParse(Console.ReadLine(), out int usuarioId))
+        {
+            Console.WriteLine("Ingrese el código del libro:");
+            if (int.TryParse(Console.ReadLine(), out int libroCodigo))
+            {
+                bool resultado = service.registraPrestamo(usuarioId, libroCodigo);
+                if (resultado)
+                {
+                    Console.WriteLine(
+                        $"Préstamo registrado para el usuario {usuarioId} y el libro {libroCodigo}."
+                    );
+                }
+            }
+            else
+            {
+                Console.WriteLine("El código del libro debe ser un número.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("El ID del usuario debe ser un número.");
+        }
+    }
+
     static void Main()
     {
 
@@ -76,6 +127,14 @@ class Program
         service.registrarLibro(new Libro("1984", "George Orwell", "Distopía", 98765));
         service.registrarLibro(new Libro("El gran Gatsby", "F. Scott Fitzgerald", "Novela", 54321));
 
+        //-------- prueba de datos para mostrar usuarios en el menu
+        service.registrarUsuario(new Usuario(1, "Juan Pérez", "juan.perez@example.com"));
+        service.registrarUsuario(new Usuario(2, "María García", "maria.garcia@example.com"));
+        service.registrarUsuario(new Usuario(3, "Carlos López", "carlos.lopez@example.com"));
+
+        //-------- prueba de datos para mostrar prestamos en el menu
+        service.registraPrestamo(1, 12345); // Juan Pérez toma prestado "Cien años de soledad"
+
         do
         {
             Console.Clear();
@@ -86,15 +145,17 @@ class Program
                 switch (opcion)
                 {
                 case 1:
-                    RegistrarLibro(service);
+                    Console.WriteLine(" ");
+                        RegistrarLibro(service);
                     break;
 
                 case 2:
-                    Console.WriteLine("Registrar usuario");
+                    Console.WriteLine(" ");
+                    registrarUsuarios(service);
                     break;
 
                 case 3:
-                    Console.WriteLine("Registrar préstamo");
+                    registrarPrestamo(service);
                     break;
 
                 case 4:
@@ -125,7 +186,8 @@ class Program
                     break;
 
                 case 5:
-                    Console.WriteLine("Mostrar usuarios");
+                    Console.Clear();
+                    service.mostrarUsuarios();
                     break;
 
                 case 6:
