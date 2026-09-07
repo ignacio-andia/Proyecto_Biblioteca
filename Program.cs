@@ -136,6 +136,7 @@ class Program
                     Console.Clear();
                     Console.WriteLine("Saliendo...");
                     Console.WriteLine("presione una vez mas para salir");
+                    Console.ReadKey();
                     break;
 
                 default:
